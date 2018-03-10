@@ -26,8 +26,8 @@ public class ImageAdapter extends BaseAdapter {
         return null;
     }
 
-    public long getItemId(int position) {
-        return 0;
+    public long getItemId(int position){
+        return mThumbIds[position];
     }
 
     // create a new ImageView for each item referenced by the Adapter

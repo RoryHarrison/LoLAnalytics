@@ -94,7 +94,7 @@ public class ChampionPage extends AppCompatActivity {
             pickRateText.setText(">1%");
         }
 
-        if(p>=1){
+        if(b>=1){
             banRateText.setText(Integer.toString(b)+"%");
         }else{
             banRateText.setText(">1%");

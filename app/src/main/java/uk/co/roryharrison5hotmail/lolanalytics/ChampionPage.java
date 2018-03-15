@@ -143,13 +143,10 @@ public class ChampionPage extends AppCompatActivity {
                         setTier(champStats.getWinRate());
                         break;
                 }
-                Log.d("Volley", "Volley JSON post" + response);
             }
 
             @Override
             public void notifyError(String requestType,VolleyError error) {
-                Log.d("Volley", "Volley requester " + requestType);
-                Log.d("Volley", "Volley JSON post" + "That didn't work!");
             }
         };
     }

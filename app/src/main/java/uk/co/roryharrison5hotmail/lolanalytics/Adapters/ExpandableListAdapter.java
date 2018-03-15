@@ -1,4 +1,4 @@
-package uk.co.roryharrison5hotmail.lolanalytics;
+package uk.co.roryharrison5hotmail.lolanalytics.Adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+
+import uk.co.roryharrison5hotmail.lolanalytics.R;
 
 /**
  * Created by roryh on 11/03/2018.

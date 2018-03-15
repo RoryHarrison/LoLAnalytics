@@ -1,11 +1,11 @@
-package uk.co.roryharrison5hotmail.lolanalytics;
+package uk.co.roryharrison5hotmail.lolanalytics.Web.JsonFormats;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GetChampionResponse {
+public class ChampionBasics {
     @SerializedName("name")
     @Expose
     private String name;
@@ -22,14 +22,14 @@ public class GetChampionResponse {
     @Expose
     private Integer id;
 
-    public GetChampionResponse(){
+    public ChampionBasics(){
 
     }
 
-    public static GetChampionResponse parseJSON(String response) {
+    public static ChampionBasics parseJSON(String response) {
         Gson gson = new GsonBuilder().create();
-        GetChampionResponse getChampionResponse = gson.fromJson(response, GetChampionResponse.class);
-        return getChampionResponse;
+        ChampionBasics championBasics = gson.fromJson(response, ChampionBasics.class);
+        return championBasics;
     }
 
     public String getName() {

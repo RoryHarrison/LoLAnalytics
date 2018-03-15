@@ -1,12 +1,13 @@
 package uk.co.roryharrison5hotmail.lolanalytics;
 
 import android.content.Intent;
-import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import uk.co.roryharrison5hotmail.lolanalytics.Adapters.ImageAdapter;
 
 public class ChampionsActivity extends AppCompatActivity {
 

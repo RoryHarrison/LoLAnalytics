@@ -4,23 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundBlue"
     tools:context="uk.co.roryharrison5hotmail.lolanalytics.ChampionPage">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        app:layout_constraintVertical_bias="0.0">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,6 +34,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:focusableInTouchMode="true"
                 app:layout_constraintHorizontal_bias="0.029"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -47,21 +49,178 @@
                 android:layout_marginStart="21dp"
                 android:layout_marginTop="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textColor="@android:color/white"
                 app:layout_constraintLeft_toRightOf="@+id/squareView"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="0.724" />
 
-            <ExpandableListView
-                android:id="@+id/exp_listview"
-                android:layout_width="match_parent"
-                android:layout_height="353dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+            <TextView
+                android:id="@+id/statsHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:layout_constraintHorizontal_bias="0.0"
+                android:background="@color/colorPrimary"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Statistics"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:paddingLeft="16dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+
                 app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+            <ProgressBar
+                android:id="@+id/winRate"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="16dp"
+                android:color="@android:color/white"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/custom_progress"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv1"
+                android:layout_marginStart="16dp" />
+
+            <TextView
+                android:id="@+id/winRateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="0"
+                android:textColor="@android:color/white"
+                android:textSize="30dp"
+                app:layout_constraintBottom_toBottomOf="@+id/winRate"
+                app:layout_constraintLeft_toLeftOf="@+id/winRate"
+                app:layout_constraintRight_toRightOf="@+id/winRate"
+                app:layout_constraintTop_toTopOf="@+id/winRate" />
+
+            <TextView
+                android:id="@+id/tierText"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:textSize="60sp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_marginRight="78dp"
+                android:layout_marginTop="-3dp"
+
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv4" />
+
+            <TextView
+                android:id="@+id/banRateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@android:color/white"
+                android:textSize="30dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv3"
+                android:layout_marginStart="32dp" />
+
+            <TextView
+                android:id="@+id/pickRateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="129dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@android:color/white"
+                android:textSize="30dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv2"
+                android:layout_marginEnd="129dp" />
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="154dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Win Rate"
+                android:textColor="@android:color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statsHeader"
+                android:layout_marginStart="16dp" />
+
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="154dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Tier"
+                android:textColor="@android:color/white"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statsHeader" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="154dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Pick Rate"
+                android:textColor="@android:color/white"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/winRate" />
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="154dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Ban Rate"
+                android:textColor="@android:color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/winRate"
+                android:layout_marginStart="16dp" />
+
+            <TextView
+                android:id="@+id/loreHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@color/colorPrimary"
+                android:ems="10"
+                android:text="Lore"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:paddingLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/banRateText" />
+
+            <TextView
+                android:id="@+id/loreText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/loreHeader"
+                android:layout_marginRight="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintVertical_bias="0.0" />
+
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

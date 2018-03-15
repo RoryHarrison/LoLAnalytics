@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#333333</color>
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimary">#006397</color>
+    <color name="colorPrimaryDark">#00527C</color>
     <color name="colorAccent">#FF4081</color>
     <color name="darkGrey">#ffffff</color>
+    <color name="backgroundBlue">#002C43</color>
+    <color name="tierGold">#F4FF02</color>
+    <color name="tierPurple">#BE00EC</color>
+    <color name="winRateGreen">#017a2b</color>
+    <color name="tierOrange">#EC9E00</color>
+    <color name="tierRed">#FF2802</color>
 </resources>

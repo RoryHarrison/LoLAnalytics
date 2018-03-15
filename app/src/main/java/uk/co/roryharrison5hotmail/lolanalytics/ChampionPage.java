@@ -1,173 +1,156 @@
 package uk.co.roryharrison5hotmail.lolanalytics;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Arrays;
 import java.util.List;
 
-public class ChampionPage extends AppCompatActivity {
-    ProgressDialog pd;
+import uk.co.roryharrison5hotmail.lolanalytics.Web.APICommunicator;
+import uk.co.roryharrison5hotmail.lolanalytics.Web.JsonFormats.ChampionBasics;
+import uk.co.roryharrison5hotmail.lolanalytics.Web.JsonFormats.ChampionStats;
+import uk.co.roryharrison5hotmail.lolanalytics.Web.VolleyCallback;
 
-    TextView txtLore;
+import static uk.co.roryharrison5hotmail.lolanalytics.R.id.winRate;
+
+
+public class ChampionPage extends AppCompatActivity {
+
     TextView titleView;
+    TextView winRateText;
+    TextView pickRateText;
+    TextView banRateText;
+    TextView loreText;
+    TextView tierText;
+    ProgressBar winRateBar;
 
     int champID;
     String champSquare;
-    String champName = "ERROR";
+    String champName;
 
-    GetChampionResponse champResponse;
+    ChampionBasics championBasics;
 
-    //Expandable List Variables
-    private ExpandableListView listView;
-    private ExpandableListAdapter listAdapter;
-    private List<String> listDataHeader;
-    private HashMap<String,List<String>> listHash;
+    APICommunicator api;
+    VolleyCallback resultCallback;
+
+    int CHAMPION_BASICS = 0;
+    int CHAMPION_STATS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_champion_page);
 
+        //Initialise Abstract Methods
+        initVolleyCallback();
+
+        //Manage extras
         Bundle extras = getIntent().getExtras();
         this.champID = extras.getInt("id");
         this.champName = extras.getString("name");
         this.champSquare = extras.getString("square");
 
-        //txtLore = (TextView) findViewById(R.id.textView);
+        //Instantiate Views
         titleView = (TextView) findViewById(R.id.titleTextView);
+        loreText = (TextView) findViewById(R.id.loreText);
+        tierText = (TextView) findViewById(R.id.tierText);
+        winRateBar = (ProgressBar) findViewById(winRate);
+        winRateText = (TextView) findViewById(R.id.winRateText);
+        pickRateText  = (TextView) findViewById(R.id.pickRateText);
+        banRateText = (TextView) findViewById(R.id.banRateText);
+
+        api = new APICommunicator(resultCallback,this);
+        //NOTE: I have applied for a better API key to allow for more requests but haven't heard back yet
+        api.getDataVolley("GETCALL","https://na1.api.riotgames.com/lol/static-data/v3/champions/"+champID+"?locale=en_US&champData=lore&api_key=RGAPI-7a0f3501-4daa-4c24-8d78-bd571009ce06", CHAMPION_BASICS);
+        api.getDataVolley("GETCALL", "http://api.champion.gg/v2/champions/"+champID+"?elo=PLATINUM&api_key=bdeae1f47c18bbfab9bef58168c6d2d6", CHAMPION_STATS);
 
         ChampionPage.this.setTitle(champName);
         ImageView squareView = (ImageView) findViewById(R.id.squareView);
         int resID = getResources().getIdentifier(champSquare, "drawable", getPackageName());
         squareView.setImageResource(resID);
-
-        new JsonTask().execute("https://euw1.api.riotgames.com/lol/static-data/v3/champions/"+champID+"?locale=en_US&champData=lore&api_key=RGAPI-3dd85f10-fac4-4ed1-bdfd-bf4f74dc465d");
-
-        listView = (ExpandableListView) findViewById(R.id.exp_listview);
-        listAdapter = new ExpandableListAdapter(this,listDataHeader,listHash);
-        listView.setAdapter(listAdapter);
-
     }
 
-    private void initData(){
-        listDataHeader = new ArrayList<>();
-        listHash = new HashMap<>();
+    private void setProgressBar(double wr){
+        int i = (int)Math.round(wr*100);
+        winRateBar.setProgress(i);
+        winRateText.setText(Integer.toString(i)+"%");
+    }
+    private void setPickBanText(double pr, double br){
+        int p = (int)Math.round(pr*100);
+        int b = (int)Math.round(br*100);
 
-        listDataHeader.add("Lore");
-        listDataHeader.add("Recommended Items");
-        listDataHeader.add("Win Rate");
-        listDataHeader.add("Runes");
+        if(p>=1){
+            pickRateText.setText(Integer.toString(p)+"%");
+        }else{
+            pickRateText.setText(">1%");
+        }
 
-        List<String> lore = new ArrayList<>();
-        lore.add("Expandable!");
-
-        List<String> recommmendedItems = new ArrayList<>();
-        recommmendedItems.add("Woo!");
-
-        List<String> winRate = new ArrayList<>();
-        winRate.add("win");
-
-        List<String> runes = new ArrayList<>();
-        runes.add("RUNE!");
-
-        listHash.put(listDataHeader.get(0), lore);
-        listHash.put(listDataHeader.get(1), recommmendedItems);
-        listHash.put(listDataHeader.get(2), winRate);
-        listHash.put(listDataHeader.get(3), runes);
+        if(p>=1){
+            banRateText.setText(Integer.toString(b)+"%");
+        }else{
+            banRateText.setText(">1%");
+        }
     }
 
-    private class JsonTask extends AsyncTask<String, String, String> {
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pd = new ProgressDialog(ChampionPage.this);
-            pd.setMessage("Loading");
-            pd.setCancelable(false);
-            pd.show();
+    private void setTier(double wr) {
+        int i = (int)Math.round(wr*100);
+        if(i>=53){
+            tierText.setText("S");
+            tierText.setTextColor(ContextCompat.getColor(this, R.color.tierGold));
+        }else if(i>=50&&i<53){
+            tierText.setText("A");
+            tierText.setTextColor(ContextCompat.getColor(this, R.color.winRateGreen));
+        }else if(i<50&&i>46){
+            tierText.setText("B");
+            tierText.setTextColor(ContextCompat.getColor(this, R.color.tierOrange));
+        }else if(i<47){
+            tierText.setText("C");
+            tierText.setTextColor(ContextCompat.getColor(this, R.color.tierRed));
+        }else{
+            tierText.setText("");
+            tierText.setTextColor(ContextCompat.getColor(this, android.R.color.white));
         }
+    }
 
-        protected String doInBackground(String... params) {
-
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                if(connection.getResponseCode()!= 200) {
-                    return "Bad Response";
+    void initVolleyCallback() {
+        resultCallback = new VolleyCallback() {
+            @Override
+            public void notifySuccess(String requestType,String response, int call) {
+                switch(call){
+                    case 0:
+                        championBasics = championBasics.parseJSON(response);
+                        String title = championBasics.getTitle();
+                        String lore = championBasics.getLore();
+                        title = title.toUpperCase().charAt(0)+title.substring(1,title.length());
+                        titleView.setText(title);
+                        loreText.setText(lore);
+                        break;
+                    case 1:
+                        Gson gson = new GsonBuilder().create();
+                        List<ChampionStats> championStats = Arrays.asList(gson.fromJson(response, ChampionStats[].class));
+                        ChampionStats champStats = championStats.get(0);
+                        setProgressBar(champStats.getWinRate());
+                        setPickBanText(champStats.getPlayRate(), champStats.getBanRate());
+                        setTier(champStats.getWinRate());
+                        break;
                 }
-
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer buffer = new StringBuffer();
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line+"\n");
-                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
-
-                }
-
-                return buffer.toString();
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            if (pd.isShowing()){
-                pd.dismiss();
+                Log.d("Volley", "Volley JSON post" + response);
             }
 
-            champResponse = champResponse.parseJSON(result);
-
-            String title = champResponse.getTitle();
-            title = title.toUpperCase().charAt(0)+title.substring(1,title.length());
-
-            titleView.setText(title);
-            initData();
-            //txtLore.setText(champResponse.getLore());
-
-        }
+            @Override
+            public void notifyError(String requestType,VolleyError error) {
+                Log.d("Volley", "Volley requester " + requestType);
+                Log.d("Volley", "Volley JSON post" + "That didn't work!");
+            }
+        };
     }
 }

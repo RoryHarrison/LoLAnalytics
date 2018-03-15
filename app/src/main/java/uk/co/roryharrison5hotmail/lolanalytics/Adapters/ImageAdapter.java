@@ -1,4 +1,4 @@
-package uk.co.roryharrison5hotmail.lolanalytics;
+package uk.co.roryharrison5hotmail.lolanalytics.Adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import uk.co.roryharrison5hotmail.lolanalytics.R;
 
 /**
  * Created by roryh on 08/03/2018.
